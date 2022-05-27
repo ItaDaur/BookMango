@@ -18,6 +18,9 @@ const loginController = require('./controllers/login')
 const loginUserController = require('./controllers/loginUser')
 const logoutController = require('./controllers/logout')
 
+const userController = require('./controllers/UserController')
+const blogController = require('./controllers/BlogController')
+
 //connect
 const dbConfig = require('./config/database.config.js');
 mongoose.Promise = global.Promise;
@@ -55,15 +58,15 @@ app.use('*', (req,res,next) => {
 app.use('/posts/store',validateMiddleware)
 
 //routes
-app.get('/', homeController)
-app.get('/post/:id', getPostController)
-app.get('/posts/new',authMiddleware,newPostController)
-app.post('/posts/store',authMiddleware, storePostController)
-app.get('/auth/register',redirectIfAuthenticatedMiddleware, newUserController)
-app.post('/users/register',redirectIfAuthenticatedMiddleware, storeUserController)
-app.get('/auth/login',redirectIfAuthenticatedMiddleware, loginController)
-app.post('/users/login',redirectIfAuthenticatedMiddleware, loginUserController)
-app.get('/auth/logout', logoutController)
+app.get('/', blogController.home)
+app.get('/post/:id', blogController.getPost)
+app.get('/posts/new',authMiddleware,blogController.newPost)
+app.post('/posts/store',authMiddleware, blogController.storePost)
+app.get('/auth/register',redirectIfAuthenticatedMiddleware, userController.newUser)
+app.post('/users/register',redirectIfAuthenticatedMiddleware, userController.storeUser)
+app.get('/auth/login',redirectIfAuthenticatedMiddleware, userController.login)
+app.post('/users/login',redirectIfAuthenticatedMiddleware, userController.loginUser)
+app.get('/auth/logout', userController.logout)
 
 //not found
 app.use((req,res) => {
